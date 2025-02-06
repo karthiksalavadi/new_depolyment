@@ -1,22 +1,20 @@
-version: '3.8'
+version: "3.8"
 
 services:
   jenkins:
-    image: jenkins/jenkins:lts
+    image: jenkins/jenkins:lts # Official Jenkins Long-Term Support image
     container_name: jenkins
-    restart: unless-stopped
-    privileged: true
-    user: root
     ports:
-      - "8080:8080"
-      - "50000:50000"
+      - "8080:8080"  # Expose Jenkins on port 8080
+      - "50000:50000" # For Jenkins agents to connect to the master
     volumes:
-      - jenkins_home:/var/jenkins_home
-      - /var/run/docker.sock:/var/run/docker.sock  # Allows Jenkins to run Docker commands
+      - jenkins_home:/var/jenkins_home  # Persist Jenkins data
     environment:
-      - JENKINS_OPTS="--prefix=/jenkins"  # Optional: Change Jenkins URL prefix
-      - JAVA_OPTS="-Djenkins.install.runSetupWizard=false"  # Skips setup wizard
+      - JAVA_OPTS=-Djenkins.install.runSetupWizard=false  # Skip setup wizard
+    restart: unless-stopped  # Automatically restart Jenkins if it crashes
 
 volumes:
-  jenkins_home:
+  jenkins_home:  # Volume to persist Jenkins data
+    driver: local
+
 
